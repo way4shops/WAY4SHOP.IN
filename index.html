@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Profile - Way4Shop</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --whatsapp: #25D366;
+            --call: #0f9d58;
+            --bg: #f4f7f6;
+            --card: #ffffff;
+            --text: #222222;
+            --muted: #5f6368;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+        
+        /* Top Banner */
+        .hero {
+            background: linear-gradient(135deg, #0d47a1, #1976d2);
+            color: white;
+            text-align: center;
+            padding: 35px 20px 65px;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .hero h1 { font-size: 1.9rem; margin-bottom: 6px; font-weight: 700; }
+        .hero p { font-size: 1rem; opacity: 0.92; }
+
+        /* Main Container */
+        .container { max-width: 720px; margin: -45px auto 30px; padding: 0 15px; }
+        .card {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        /* Shop Image */
+        .shop-img-wrap { text-align: center; margin-bottom: 18px; }
+        .shop-img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 3px solid #eef2f6;
+            display: none;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 18px 0;
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-call { background: var(--call); }
+        .btn-wa { background: var(--whatsapp); }
+        .btn-web { background: var(--primary); }
+        .btn-share { background: #37474f; }
+
+        /* Info Sections */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0d47a1;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #e8f0fe;
+            padding-bottom: 5px;
+        }
+        .desc-text { color: #333; font-size: 1rem; white-space: pre-line; margin-bottom: 18px; }
+        .info-row { display: flex; flex-direction: column; gap: 10px; font-size: 0.98rem; }
+        .info-item { background: #f8f9fa; padding: 12px 15px; border-radius: 10px; border-left: 4px solid var(--primary); }
+        .info-item strong { color: #111; display: block; font-size: 0.85rem; text-transform: uppercase; color: var(--muted); }
+
+        /* Video Container */
+        .video-box {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 14px;
+            background: #000;
+            margin-top: 10px;
+        }
+        .video-box iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; border: 0;
+        }
+
+        /* Loader & Error */
+        .status-box { text-align: center; padding: 60px 20px; }
+        .spinner {
+            width: 42px; height: 42px;
+            border: 4px solid #dce6f7;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Footer */
+        footer { text-align: center; padding: 20px 15px 35px; color: var(--muted); font-size: 0.9rem; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div id="loader" class="status-box">
+        <div class="spinner"></div>
+        <p>వ్యాపార వివరాలు లోడ్ అవుతున్నాయి... దయచేసి వేచి ఉండండి.</p>
+    </div>
+
+    <div id="errorBox" class="status-box" style="display:none;">
+        <h2 style="margin-bottom:10px;">షాప్ వివరాలు కనుగొనబడలేదు</h2>
+        <p style="color:#555; margin-bottom:20px;">ఈ లింక్ ఇంకా ఆమోదించబడలేదు (Pending Approval) లేదా తప్పుగా ఉంది.</p>
+        <a href="https://way4shops.com" class="btn btn-web" style="display:inline-flex;">అన్ని షాపులు చూడండి (Way4Shops)</a>
+    </div>
+
+    <div id="mainContent" style="display:none;">
+        <header class="hero">
+            <span class="badge" id="shopCategory">Category</span>
+            <h1 id="shopName">Shop Name</h1>
+            <p id="shopOwner">Owner</p>
+        </header>
+
+        <div class="container">
+            <div class="card">
+                <div class="shop-img-wrap">
+                    <img id="shopImage" class="shop-img" alt="Shop Photo" onerror="this.style.display='none'">
+                </div>
+
+                <div class="actions">
+                    <a id="callBtn" href="#" class="btn btn-call" style="display:none;">📞 Call Now</a>
+                    <a id="waBtn" href="#" target="_blank" class="btn btn-wa" style="display:none;">💬 WhatsApp</a>
+                    <a id="webBtn" href="#" target="_blank" class="btn btn-web" style="display:none;">🌐 Website</a>
+                    <button onclick="sharePage()" class="btn btn-share">🔗 Share Link</button>
+                </div>
+
+                <div id="descSection" style="display:none;">
+                    <div class="section-title">మా సేవలు & వివరాలు (About Us)</div>
+                    <p class="desc-text" id="shopDesc"></p>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-item" id="addressBox" style="display:none;">
+                        <strong>📍 చిరునామా (Address)</strong>
+                        <span id="shopAddress"></span>
+                    </div>
+                    <div class="info-item" id="phoneBox" style="display:none;">
+                        <strong>☎️ ఫోన్ నంబర్ (Contact)</strong>
+                        <span id="shopPhoneText"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="videoCard" style="display:none;">
+                <div class="section-title">🎥 మా వీడియో (Shop Video)</div>
+                <div class="video-box">
+                    <iframe id="ytFrame" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Digital Business Card powered by <a href="https://way4shops.com">Way4Shops.com</a></p>
+            <p style="margin-top:5px; font-size:0.82rem;">మీ వ్యాపారాన్ని కూడా ఆన్‌లైన్‌లో చేర్చుకోవడానికి Way4Shops ని సందర్శించండి.</p>
+        </footer>
+    </div>
+
+    <script>
+        // మీ Google Apps Script Web App URL ని ఇక్కడ రెండు కొటేషన్ల మధ్య పేస్ట్ చేయండి
+        const SCRIPT_URL = "";
+
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return "";
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? "https://www.youtube.com/embed/" + match[2] : "";
+        }
+
+        function cleanPhone(num) {
+            return String(num || "").replace(/[^0-9]/g, "");
+        }
+
+        function sharePage() {
+            const title = document.getElementById("shopName").innerText;
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: title, text: title + " - వివరాలు చూడండి:", url: url });
+            } else {
+                navigator.clipboard.writeText(url);
+                alert("వెబ్‌సైట్ లింక్ కాపీ చేయబడింది! మీరు ఎవరికైనా పేస్ట్ చేసి పంపవచ్చు.");
+            }
+        }
+
+        async function loadShop() {
+            if (!SCRIPT_URL) {
+                document.getElementById("loader").innerHTML = "<p style='color:red;font-weight:bold;'>దయచేసి కోడ్‌లో SCRIPT_URL జత చేయండి మిత్రమా!</p>";
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const shopId = params.get("id"); // ఉదాహరణకు ?id=2 (Google Sheet Row Number) లేదా షాప్ పేరు
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                
+                // డేటా అర్రే ఆఫ్ అర్రేస్ లేదా ఆబ్జెక్ట్స్ రూపంలో ఉన్నా హ్యాండిల్ చేస్తుంది
+                let rows = Array.isArray(data) ? data : (data.data || []);
+                
+                // Approved అయిన షాపులను మాత్రమే ఫిల్టర్ చేయడం (Column 2 = Status, index 1)
+                let approvedShops = [];
+                rows.forEach((row, idx) => {
+                    // ఒకవేళ row ఆబ్జెక్ట్ అయితే అర్రేగా మార్చడం లేదా నేరుగా ఇండెక్స్ వాడటం
+                    let r = Array.isArray(row) ? row : Object.values(row);
+                    if (idx === 0 && String(r[1]).toLowerCase() === "status") return; // Header row skip
+                    
+                    if (String(r[1] || "").trim().toLowerCase() === "approved") {
+                        approvedShops.push({ rowNumber: idx + 1, cols: r });
+                    }
+                });
+
+                if (approvedShops.length === 0) {
+                    showError();
+                    return;
+                }
+
+                let selected = null;
+                if (shopId) {
+                    // ముందుగా Row Number తో వెతుకుతుంది (?id=2)
+                    selected = approvedShops.find(s => String(s.rowNumber) === String(shopId));
+                    // లేదంటే Shop Name తో వెతుకుతుంది (?id=ShopName)
+                    if (!selected) {
+                        selected = approvedShops.find(s => String(s.cols[2]).toLowerCase().includes(shopId.toLowerCase()));
+                    }
+                } else {
+                    // ?id= లేకపోతే మొదటి Approved షాప్ చూపిస్తుంది
+                    selected = approvedShops[0];
+                }
+
+                if (!selected) {
+                    showError();
+                    return;
+                }
+
+                renderShop(selected.cols);
+            } catch (err) {
+                console.error(err);
+                showError();
+            }
+        }
+
+        function renderShop(c) {
+            // Columns Mapping (0-indexed):
+            // 0:Timestamp, 1:Status, 2:Name, 3:Owner, 4:Category, 5:Desc, 6:Address, 
+            // 7:Phone, 8:Whatsapp, 9:Website, 10:Youtube, 11:Amount, 12:PaymentMode, 13:Image
+
+            const name = c[2] || "Business Name";
+            const owner = c[3] ? "👤 " + c[3] : "";
+            const category = c[4] || "Local Business";
+            const desc = c[5] || "";
+            const address = c[6] || "";
+            const phone = cleanPhone(c[7]);
+            const whatsapp = cleanPhone(c[8]) || phone;
+            const website = c[9] || "";
+            const youtube = c[10] || "";
+            const image = c[13] || "";
+
+            document.title = name + " - Official Page";
+            document.getElementById("shopName").innerText = name;
+            document.getElementById("shopOwner").innerText = owner;
+            document.getElementById("shopCategory").innerText = category;
+
+            if (image && String(image).startsWith("http")) {
+                const imgEl = document.getElementById("shopImage");
+                imgEl.src = image;
+                imgEl.style.display = "block";
+            }
+
+            if (desc) {
+                document.getElementById("shopDesc").innerText = desc;
+                document.getElementById("descSection").style.display = "block";
+            }
+
+            if (address) {
+                document.getElementById("shopAddress").innerText = address;
+                document.getElementById("addressBox").style.display = "block";
+            }
+
+            if (c[7]) {
+                document.getElementById("shopPhoneText").innerText = c[7];
+                document.getElementById("phoneBox").style.display = "block";
+            }
+
+            if (phone) {
+                const callBtn = document.getElementById("callBtn");
+                callBtn.href = "tel:" + phone;
+                callBtn.style.display = "flex";
+            }
+
+            if (whatsapp) {
+                const waNum = whatsapp.length === 10 ? "91" + whatsapp : whatsapp;
+                const waBtn = document.getElementById("waBtn");
+                waBtn.href = "https://wa.me/" + waNum + "?text=" + encodeURIComponent("నమస్కారం " + name + ", Way4Shop ద్వారా మీ వివరాలు చూశాను.");
+                waBtn.style.display = "flex";
+            }
+
+            if (website && String(website).startsWith("http")) {
+                const webBtn = document.getElementById("webBtn");
+                webBtn.href = website;
+                webBtn.style.display = "flex";
+            }
+
+            const embedUrl = getYouTubeEmbedUrl(youtube);
+            if (embedUrl) {
+                document.getElementById("ytFrame").src = embedUrl;
+                document.getElementById("videoCard").style.display = "block";
+            }
+
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+        }
+
+        function showError() {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("errorBox").style.display = "block";
+        }
+
+        loadShop();
+    </script>
+</body>
+</html>
