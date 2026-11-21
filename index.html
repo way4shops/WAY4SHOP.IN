@@ -843,9 +843,9 @@
                     <input type="text" id="newShopName" placeholder="e.g., Sri Lakshmi General Store" required>
                 </div>
                 <div class="form-group">
-                    <label class="field-title">Select Category/Areas</label>
+                    <label class="field-title">Select State/Category/Areas</label>
                     <select id="newShopCategory" required>
-                        <option value="">-- Select Category/Areas --</option>
+                        <option value="">-- Select State/Category/Areas --</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -942,7 +942,7 @@
         function loadWay4ShopCategories(selectElementId) {
             const selectDropdown = document.getElementById(selectElementId);
             if (!selectDropdown) return;
-            selectDropdown.innerHTML = '<option value="">-- Select Category/Area --</option>';
+            selectDropdown.innerHTML = '<option value="">-- Select State/Category/Area --</option>';
             way4shopCategories.forEach(category => {
                 let option = document.createElement('option');
                 option.value = category.toLowerCase();
